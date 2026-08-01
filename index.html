@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BMJ - Bot Maker Jubbio</title>
+    <title>BlazeADS - Sunucu Reklamları</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -15,11 +15,10 @@
             --bg-input: rgba(10, 16, 38, 0.85);
             --neon-blue: #2563eb;
             --neon-purple: #8b5cf6;
-            --glow-purple: rgba(139, 92, 246, 0.35);
             --glow-blue: rgba(37, 99, 235, 0.35);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
-            --border-glow: rgba(139, 92, 246, 0.25);
+            --border-glow: rgba(37, 99, 235, 0.25);
             --danger: #ef4444;
             --success: #10b981;
         }
@@ -29,194 +28,159 @@
             margin: 0; padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
         }
 
         html, body {
             width: 100%;
             height: 100%;
-            overflow: hidden;
             background-color: var(--bg-black);
             color: var(--text-main);
+            overflow-x: hidden;
         }
 
         .app-container {
             width: 100%;
-            height: 100%;
-            max-width: 440px;
+            max-width: 480px;
             margin: 0 auto;
-            background: radial-gradient(circle at top right, #15103a 0%, var(--bg-black) 80%);
+            min-height: 100vh;
+            background: radial-gradient(circle at top right, #10173a 0%, var(--bg-black) 70%);
             display: flex;
             flex-direction: column;
             position: relative;
-            overflow: hidden;
+            padding-bottom: 40px;
         }
 
+        /* HEADER */
         .app-header {
             background: rgba(9, 14, 36, 0.95);
             backdrop-filter: blur(16px);
-            padding: 14px;
-            text-align: center;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 1px solid var(--border-glow);
-            flex-shrink: 0;
+            position: sticky;
+            top: 0;
             z-index: 10;
         }
 
         .app-header h1 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            background: linear-gradient(90deg, #60a5fa, #c084fc);
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
         }
 
-        .view-panel {
-            flex: 1;
-            display: none;
-            flex-direction: column;
-            overflow-y: auto;
-            position: relative;
-            padding: 16px;
-            padding-bottom: 70px;
-        }
-
-        .view-panel.active { display: flex; }
-
-        #auth-screen {
-            justify-content: center;
-            padding-bottom: 16px;
-            background: radial-gradient(circle at center, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
-        }
-
-        .auth-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            padding: 24px 18px;
-            border-radius: 20px;
-            border: 1px solid var(--border-glow);
-        }
-
-        .auth-card h2 { text-align: center; font-size: 1.2rem; margin-bottom: 16px; }
-
-        .input-group { margin-bottom: 12px; position: relative; }
-        .input-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-sub); }
-
-        .input-box {
-            width: 100%;
-            padding: 12px 12px 12px 40px;
-            background: var(--bg-input);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+        /* MAVİ + BUTON */
+        .add-fab-btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: #fff;
-            outline: none;
-            user-select: text;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--glow-blue);
+            border: none;
+            transition: transform 0.2s;
+        }
+        .add-fab-btn:active { transform: scale(0.9); }
+
+        /* REKLAM AKIŞ ALANI */
+        .feed-container {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
-        .btn-purple { background: linear-gradient(135deg, #6366f1, var(--neon-purple)); }
-        .btn-blue { background: linear-gradient(135deg, #1d4ed8, var(--neon-blue)); }
-        .btn-danger { background: var(--danger); }
-        .btn-secondary { background: rgba(255, 255, 255, 0.08); color: var(--text-sub); }
-
-        .empty-box { margin: auto; text-align: center; color: var(--text-sub); font-size: 1rem; }
-
-        .bot-list { display: flex; flex-direction: column; gap: 10px; }
-
-        .bot-card {
+        .ad-card {
             background: var(--bg-card);
             backdrop-filter: blur(12px);
-            border-radius: 14px;
-            padding: 14px;
             border: 1px solid var(--border-glow);
-            border-left: 4px solid var(--neon-purple);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .ad-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .ad-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .ad-owner {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            background: rgba(255,255,255,0.05);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .ad-desc {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .ad-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
-        }
-
-        .fab-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #1d4ed8, var(--neon-blue));
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            box-shadow: 0 6px 20px var(--glow-blue);
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glow);
-            padding: 14px;
-            border-radius: 14px;
-            margin-bottom: 12px;
-        }
-
-        .timer-display {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.4rem;
-            color: var(--success);
-            font-weight: 700;
             margin-top: 4px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
         }
 
-        .bottom-nav {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            display: flex;
-            background: rgba(9, 14, 36, 0.98);
-            backdrop-filter: blur(16px);
-            border-top: 1px solid var(--border-glow);
-            z-index: 99;
+        .ad-time {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .nav-link {
-            flex: 1;
+        .join-btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            color: var(--text-sub);
-            cursor: pointer;
-            opacity: 0.4;
+            gap: 6px;
         }
 
-        .nav-link.active { opacity: 1; color: var(--neon-purple); }
+        .empty-feed {
+            text-align: center;
+            color: var(--text-sub);
+            margin-top: 60px;
+            font-size: 0.95srem;
+        }
 
+        /* MODAL (PANEL) */
         .modal-bg {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(3, 5, 11, 0.92);
+            background: rgba(3, 5, 11, 0.85);
             backdrop-filter: blur(10px);
             z-index: 100;
             justify-content: center;
@@ -227,401 +191,267 @@
         .modal-box {
             background: var(--bg-darkblue);
             width: 100%;
-            padding: 18px;
+            max-width: 420px;
+            padding: 20px;
             border-radius: 20px;
             border: 1px solid var(--border-glow);
-        }
-
-        .code-area {
-            width: 100%;
-            height: 160px;
-            background: #04060f;
-            border: 1px solid var(--border-glow);
-            border-radius: 12px;
-            color: #a78bfa;
-            font-family: 'JetBrains Mono', monospace;
-            padding: 10px;
-            outline: none;
-            margin-bottom: 10px;
-            resize: none;
-            user-select: text;
-            font-size: 0.78rem;
-        }
-
-        .logs-area {
-            background: #020307;
-            border: 1px solid var(--border-glow);
-            border-radius: 12px;
-            height: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 90vh;
             overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .modal-box h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
             font-size: 0.75rem;
-            color: var(--success);
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--bg-input);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+            font-size: 0.85rem;
+        }
+        .input-box:focus { border-color: var(--neon-blue); }
+
+        textarea.input-box {
+            resize: none;
+            height: 90px;
+        }
+
+        .char-count {
+            font-size: 0.7rem;
+            color: var(--text-sub);
+            text-align: right;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.08); color: var(--text-sub); }
+
+        .cooldown-alert {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
             padding: 10px;
-            margin-bottom: 10px;
-            user-select: text;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
 <body>
 
 <div class="app-container">
+    <!-- HEADER -->
     <div class="app-header">
-        <h1><i class="fa-solid fa-robot"></i> BMJ - Bot Maker Jubbio</h1>
+        <h1><i class="fa-solid fa-bullhorn" style="color:#3b82f6"></i> BlazeADS</h1>
+        <button class="add-fab-btn" onclick="openAdModal()"><i class="fa-solid fa-plus"></i></button>
     </div>
 
-    <!-- 1. GİRİŞ EKRANI -->
-    <div id="auth-screen" class="view-panel active">
-        <div class="auth-card">
-            <h2>Giriş Yap / Kayıt Ol</h2>
-            <div class="input-group">
-                <i class="fa-solid fa-user"></i>
-                <input type="text" id="user-input" class="input-box" placeholder="Kullanıcı Adı">
-            </div>
-            <div class="input-group">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" id="pass-input" class="input-box" placeholder="Şifre">
-            </div>
-            <button class="btn btn-purple" onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> Giriş Yap</button>
-        </div>
+    <!-- REKLAM AKIŞI -->
+    <div id="feed-box" class="feed-container">
+        <!-- Reklamlar buraya dinamik gelecek -->
     </div>
+</div>
 
-    <!-- 2. ANA EKRAN (BOT LİSTESİ) -->
-    <div id="main-screen" class="view-panel">
-        <div id="bot-list-box" class="bot-list"></div>
-        <div class="fab-btn" onclick="openModal('make-modal')"><i class="fa-solid fa-plus"></i> Make Bot</div>
-    </div>
-
-    <!-- 3. BOT ÖZEL SAYFASI -->
-    <div id="detail-screen" class="view-panel">
-        <div id="tab-home" class="tab-sec">
-            <div class="glass-card">
-                <p style="font-size:0.75rem; color:var(--text-sub);">Bot İsmi</p>
-                <h2 id="bot-name-txt" style="font-size:1.3rem; margin-top:2px;">-</h2>
-            </div>
-            <div class="glass-card">
-                <p style="font-size:0.75rem; color:var(--text-sub);">Kalan Aktiflik Müddeti</p>
-                <div id="host-timer-txt" class="timer-display">Pasif</div>
-            </div>
-            <button class="btn btn-purple" onclick="addHost()"><i class="fa-solid fa-bolt"></i> 1 Saat Host Ver</button>
-            <p id="cd-alert" style="color:var(--danger); font-size:0.75rem; text-align:center; margin-top:6px; display:none;">
-                ⚠️ 5 Dakika Cooldown aktif!
-            </p>
-            <div class="glass-card" style="margin-top:12px;">
-                <h4 style="font-size:0.85rem; margin-bottom:6px; color:var(--text-sub);">Sunucu Durumu</h4>
-                <p style="font-size:0.8rem;"><i class="fa-solid fa-server" style="color:var(--success)"></i> Render Backend Bağlı</p>
-                <p style="font-size:0.8rem; margin-top:4px;"><i class="fa-solid fa-check" style="color:var(--success)"></i> @jubbio/core { Client }</p>
-            </div>
+<!-- REKLAM OLUŞTURMA MODALI -->
+<div id="ad-modal" class="modal-bg">
+    <div class="modal-box">
+        <h3><i class="fa-solid fa-rectangle-ad" style="color:var(--neon-blue)"></i> Sunucu Reklamı Yayınla</h3>
+        
+        <div id="cooldown-box" class="cooldown-alert">
+            ⚠️ Yeni reklam yayınlamak için <span id="cd-time">1:00:00</span> beklemelisin!
         </div>
 
-        <div id="tab-codes" class="tab-sec" style="display:none;">
-            <button class="btn btn-blue" style="margin-bottom:12px;" onclick="openAddCodeModal()"><i class="fa-solid fa-plus"></i> Yeni Kod Ekle</button>
-            <div id="code-list-box"></div>
+        <div class="input-group">
+            <label>Sunucu İsmi (En az 3 karakter)</label>
+            <input type="text" id="server-name" class="input-box" placeholder="Örn: Türkiye Topluluğu">
         </div>
 
-        <div id="tab-settings" class="tab-sec" style="display:none;">
-            <button class="btn btn-secondary" style="margin-bottom:8px;" onclick="editToken()"><i class="fa-solid fa-key"></i> Token Düzenle</button>
-            <button class="btn btn-secondary" style="margin-bottom:8px;" onclick="openModal('logs-modal')"><i class="fa-solid fa-terminal"></i> Bot Logları</button>
-            <button class="btn btn-danger" style="margin-bottom:12px;" onclick="deleteBot()"><i class="fa-solid fa-trash"></i> Botu Sil</button>
-            <button class="btn btn-secondary" onclick="exitDetail()"><i class="fa-solid fa-arrow-left"></i> Ana Ekrana Dön</button>
+        <div class="input-group">
+            <label>Açıklama (En az 50 karakter)</label>
+            <textarea id="server-desc" class="input-box" placeholder="Sunucunuzdan bahsedin..." oninput="updateCharCount()"></textarea>
+            <div class="char-count"><span id="char-counter">0</span> / 50 min</div>
         </div>
 
-        <!-- SABİT ALT MENÜ -->
-        <div class="bottom-nav">
-            <div class="nav-link active" onclick="switchTab('home', this)">🏡</div>
-            <div class="nav-link" onclick="switchTab('codes', this)">🖥️</div>
-            <div class="nav-link" onclick="switchTab('settings', this)">⚙️</div>
+        <div class="input-group">
+            <label>Owner İsim</label>
+            <input type="text" id="owner-name" class="input-box" placeholder="Örn: Elmir">
         </div>
-    </div>
 
-    <!-- MODAL: MAKE BOT -->
-    <div id="make-modal" class="modal-bg">
-        <div class="modal-box">
-            <h3 style="margin-bottom:12px; font-size:1.1rem;">Yeni Bot Oluştur</h3>
-            <div class="input-group">
-                <i class="fa-solid fa-key"></i>
-                <input type="text" id="make-token" class="input-box" placeholder="Jubbio Bot Token">
-            </div>
-            <button class="btn btn-purple" onclick="submitMakeBot()">Oluştur</button>
-            <button class="btn btn-secondary" style="margin-top:6px;" onclick="closeModal('make-modal')">İptal</button>
+        <div class="input-group">
+            <label>Davet Linki (https://jubbio.com/invite/ ile başlamalı)</label>
+            <input type="text" id="invite-link" class="input-box" placeholder="https://jubbio.com/invite/m2awfr8x">
         </div>
-    </div>
 
-    <!-- MODAL: KOD EDITÖRÜ -->
-    <div id="code-modal" class="modal-bg">
-        <div class="modal-box">
-            <h3 style="margin-bottom:12px; font-size:1.1rem;">JS Kod Editörü</h3>
-            <div class="input-group">
-                <i class="fa-solid fa-tag"></i>
-                <input type="text" id="code-title" class="input-box" placeholder="Dosya Adı (Örn: index.js)">
-            </div>
-            <textarea id="code-body" class="code-area"></textarea>
-            <button class="btn btn-purple" onclick="submitSaveCode()">Kaydet</button>
-            <button class="btn btn-secondary" style="margin-top:6px;" onclick="closeModal('code-modal')">İptal</button>
-        </div>
-    </div>
-
-    <!-- MODAL: LOGLAR -->
-    <div id="logs-modal" class="modal-bg">
-        <div class="modal-box">
-            <h3 style="margin-bottom:12px; font-size:1.1rem;"><i class="fa-solid fa-terminal"></i> Bot Log Paneli</h3>
-            <div id="logs-content" class="logs-area"></div>
-            <button class="btn btn-secondary" onclick="closeModal('logs-modal')">Kapat</button>
-        </div>
+        <button id="publish-btn" class="btn btn-blue" onclick="publishAd()"><i class="fa-solid fa-paper-plane"></i> Yayınla</button>
+        <button class="btn btn-secondary" onclick="closeAdModal()">İptal</button>
     </div>
 </div>
 
 <script>
-    const RENDER_BACKEND_URL = "https://bmj-backend.onrender.com";
+    // LocalStorage veri yapısı
+    let blazeadsData = JSON.parse(localStorage.getItem('blazeads_db_v1')) || { ads: [], lastPublished: 0 };
 
-    let appData = JSON.parse(localStorage.getItem('bmj_db_v5')) || { bots: [] };
-    let currentBotId = null;
-    let editingCodeIdx = null;
+    function renderFeed() {
+        const feedBox = document.getElementById('feed-box');
+        feedBox.innerHTML = '';
 
-    const DEFAULT_JUBBIO_TEMPLATE = `import { Client, GatewayIntentBits } from '@jubbio/core';
-
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-});
-
-client.on('ready', () => {
-  console.log('Bot aktif!');
-});
-
-client.login(process.env.TOKEN);`;
-
-    function login() {
-        const u = document.getElementById('user-input').value.trim();
-        const p = document.getElementById('pass-input').value.trim();
-        if(!u || !p) return alert("Kullanıcı adı ve şifre girilmelidir!");
-        
-        document.getElementById('auth-screen').classList.remove('active');
-        document.getElementById('main-screen').classList.add('active');
-        renderMainScreen();
-    }
-
-    function openModal(id) {
-        if(id === 'logs-modal') {
-            const bot = appData.bots.find(b => String(b.id) === String(currentBotId));
-            if(bot) {
-                document.getElementById('logs-content').innerHTML = bot.logs.map(l => `<div>${l}</div>`).join('');
-            }
-        }
-        document.getElementById(id).style.display = 'flex';
-    }
-
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    function renderMainScreen() {
-        const box = document.getElementById('bot-list-box');
-        box.innerHTML = '';
-        
-        if(appData.bots.length === 0) {
-            box.innerHTML = `<div class="empty-box">Botunuz Yok!</div>`;
+        if (blazeadsData.ads.length === 0) {
+            feedBox.innerHTML = `<div class="empty-feed">Henüz hiç reklam yayınlanmamış.<br>İlk reklamı sen oluştur! 🚀</div>`;
             return;
         }
 
-        appData.bots.forEach(bot => {
+        // En son yayınlanan en üstte görünmesi için dizi aynen basılır (yeni eklenenler unshift ile başa ekleniyor)
+        blazeadsData.ads.forEach(ad => {
             const card = document.createElement('div');
-            card.className = 'bot-card';
-            card.onclick = () => openBotDetail(bot.id);
+            card.className = 'ad-card';
             card.innerHTML = `
-                <div>
-                    <h4>${bot.name}</h4>
-                    <p>Dosya Sayısı: ${bot.codes.length}</p>
+                <div class="ad-header-info">
+                    <span class="ad-title">${escapeHtml(ad.serverName)}</span>
+                    <span class="ad-owner"><i class="fa-solid fa-crown" style="color:#fbbf24"></i> ${escapeHtml(ad.ownerName)}</span>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color:var(--text-sub)"></i>
+                <div class="ad-desc">${escapeHtml(ad.serverDesc)}</div>
+                <div class="ad-footer">
+                    <span class="ad-time"><i class="fa-regular fa-clock"></i> ${ad.timeStr}</span>
+                    <a href="${escapeHtml(ad.inviteLink)}" target="_blank" class="join-btn"><i class="fa-solid fa-right-to-bracket"></i> Sunucuya Katıl</a>
+                </div>
             `;
-            box.appendChild(card);
+            feedBox.appendChild(card);
         });
     }
 
-    function submitMakeBot() {
-        const token = document.getElementById('make-token').value.trim();
-        if (!token || token.length < 8) {
-            return alert("HATA: Geçersiz Token!");
+    function openAdModal() {
+        // Cooldown Kontrolü
+        const now = Date.now();
+        const diff = now - blazeadsData.lastPublished;
+        const cooldownTime = 3600 * 1000; // 1 Saat (milisaniye)
+
+        const cdBox = document.getElementById('cooldown-box');
+        const pubBtn = document.getElementById('publish-btn');
+
+        if (diff < cooldownTime) {
+            const remainingSecs = Math.ceil((cooldownTime - diff) / 1000);
+            const mins = Math.floor(remainingSecs / 60);
+            const secs = remainingSecs % 60;
+            document.getElementById('cd-time').innerText = `${mins} dk ${secs} sn`;
+            cdBox.style.display = 'block';
+            pubBtn.style.opacity = '0.5';
+            pubBtn.style.pointerEvents = 'none';
+        } else {
+            cdBox.style.display = 'none';
+            pubBtn.style.opacity = '1';
+            pubBtn.style.pointerEvents = 'auto';
         }
 
-        const botId = Date.now();
-        const botName = "JubbioBot_" + String(botId).slice(-4);
+        document.getElementById('ad-modal').style.display = 'flex';
+    }
 
-        const newBot = {
-            id: botId,
-            name: botName,
-            token: token,
-            activeUntil: 0,
-            lastHostApplied: 0,
-            codes: [{ name: 'index.js', content: DEFAULT_JUBBIO_TEMPLATE }],
-            logs: [
-                `[INIT] Sunucuya bağlantı hazır.`,
-                `[AUTH] Token doğrulandı.`
-            ]
+    function closeAdModal() {
+        document.getElementById('ad-modal').style.display = 'none';
+    }
+
+    function updateCharCount() {
+        const text = document.getElementById('server-desc').value;
+        const counter = document.getElementById('char-counter');
+        counter.innerText = text.length;
+        if(text.length >= 50) {
+            counter.style.color = 'var(--success)';
+        } else {
+            counter.style.color = 'var(--text-sub)';
+        }
+    }
+
+    function publishAd() {
+        const serverName = document.getElementById('server-name').value.trim();
+        const serverDesc = document.getElementById('server-desc').value.trim();
+        const ownerName = document.getElementById('owner-name').value.trim();
+        const inviteLink = document.getElementById('invite-link').value.trim();
+
+        // Doğrulamalar
+        if (serverName.length < 3) {
+            return alert("Sunucu ismi en az 3 karakter olmalıdır!");
+        }
+        if (serverDesc.length < 50) {
+            return alert("Açıklama en az 50 karakter olmalıdır!");
+        }
+        if (!ownerName) {
+            return alert("Lütfen Owner ismini girin!");
+        }
+        if (!inviteLink.startsWith("https://jubbio.com/invite/")) {
+            return alert("Davet linki mutlaka 'https://jubbio.com/invite/' ile başlamalıdır!");
+        }
+
+        // Yeni reklam nesnesi
+        const newAd = {
+            serverName,
+            serverDesc,
+            ownerName,
+            inviteLink,
+            timeStr: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'})
         };
 
-        appData.bots.push(newBot);
-        saveData();
-        closeModal('make-modal');
-        document.getElementById('make-token').value = '';
-        renderMainScreen();
+        // En son yayınlanan en üstte olması için unshift kullanıyoruz
+        blazeadsData.ads.unshift(newAd);
+        blazeadsData.lastPublished = Date.now();
+
+        // Kaydet ve yenile
+        localStorage.setItem('blazeads_db_v1', JSON.stringify(blazeadsData));
+        closeAdModal();
+        renderFeed();
+
+        // Formu temizle
+        document.getElementById('server-name').value = '';
+        document.getElementById('server-desc').value = '';
+        document.getElementById('owner-name').value = '';
+        document.getElementById('invite-link').value = '';
+        document.getElementById('char-counter').innerText = '0';
     }
 
-    function saveData() { localStorage.setItem('bmj_db_v5', JSON.stringify(appData)); }
-
-    function openBotDetail(id) {
-        currentBotId = id;
-        const bot = appData.bots.find(b => String(b.id) === String(id));
-        if(!bot) return;
-
-        document.getElementById('bot-name-txt').innerText = bot.name;
-        document.getElementById('main-screen').classList.remove('active');
-        document.getElementById('detail-screen').classList.add('active');
-        
-        switchTab('home', document.querySelectorAll('.nav-link')[0]);
-        updateTimer(bot);
-        renderCodes(bot);
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
-    function exitDetail() {
-        currentBotId = null;
-        document.getElementById('detail-screen').classList.remove('active');
-        document.getElementById('main-screen').classList.add('active');
-        renderMainScreen();
-    }
-
-    function switchTab(tabKey, el) {
-        document.querySelectorAll('.tab-sec').forEach(t => t.style.display = 'none');
-        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        document.getElementById('tab-' + tabKey).style.display = 'block';
-        if(el) el.classList.add('active');
-    }
-
-    // RENDER İLE BOTU CANLIYA ALAN FONKSİYON
-    async function addHost() {
-        const bot = appData.bots.find(b => String(b.id) === String(currentBotId));
-        if(!bot) return;
-
-        const mainCode = bot.codes.find(c => c.name.endsWith('.js')) || bot.codes[0];
-
-        alert("Bot Render sunucusuna tetikleniyor, lütfen bekleyin...");
-
-        try {
-            const res = await fetch(`${RENDER_BACKEND_URL}/api/run-bot`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    botId: bot.id,
-                    token: bot.token,
-                    code: mainCode ? mainCode.content : ''
-                })
-            });
-
-            const data = await res.json();
-
-            if (data.success) {
-                const now = Date.now();
-                bot.lastHostApplied = now;
-                bot.activeUntil = Math.max(now, bot.activeUntil) + 3600000;
-                bot.logs.push(`[ONLINE] Bot Render sunucusunda başarıyla aktifleşti!`);
-                saveData();
-                updateTimer(bot);
-                alert("🟢 BOT ONLINE! Sunucuda canlıya alındı.");
-            } else {
-                alert("⚠️ Hata: " + data.error);
-            }
-        } catch (err) {
-            alert("Render sunucusu uyanıyor olabilir (ilk istek 30sn sürebilir). Lütfen birkaç saniye sonra tekrar deneyin!");
-        }
-    }
-
-    function updateTimer(bot) {
-        const diff = bot.activeUntil - Date.now();
-        if(diff > 0) {
-            const mins = Math.ceil(diff / 60000);
-            document.getElementById('host-timer-txt').innerText = `${mins} Dakika`;
-        } else {
-            document.getElementById('host-timer-txt').innerText = "Pasif (Host Yok)";
-        }
-    }
-
-    function renderCodes(bot) {
-        const box = document.getElementById('code-list-box');
-        box.innerHTML = '';
-        if(bot.codes.length === 0) {
-            box.innerHTML = '<p style="color:var(--text-sub); text-align:center; margin-top:16px;">Kod Yok....</p>';
-            return;
-        }
-        bot.codes.forEach((c, i) => {
-            const item = document.createElement('div');
-            item.className = 'glass-card';
-            item.style.cursor = 'pointer';
-            item.onclick = () => openEditCode(i);
-            item.innerHTML = `<strong><i class="fa-solid fa-file-code" style="color:var(--neon-purple); margin-right:6px;"></i>${c.name}</strong>`;
-            box.appendChild(item);
-        });
-    }
-
-    function openAddCodeModal() {
-        editingCodeIdx = null;
-        document.getElementById('code-title').value = '';
-        document.getElementById('code-body').value = DEFAULT_JUBBIO_TEMPLATE;
-        openModal('code-modal');
-    }
-
-    function openEditCode(idx) {
-        const bot = appData.bots.find(b => String(b.id) === String(currentBotId));
-        editingCodeIdx = idx;
-        document.getElementById('code-title').value = bot.codes[idx].name;
-        document.getElementById('code-body').value = bot.codes[idx].content;
-        openModal('code-modal');
-    }
-
-    function submitSaveCode() {
-        const title = document.getElementById('code-title').value.trim();
-        const content = document.getElementById('code-body').value;
-        const bot = appData.bots.find(b => String(b.id) === String(currentBotId));
-
-        if(!title) return alert("Kod dosyası ismi girilmelidir!");
-
-        if(editingCodeIdx !== null) {
-            bot.codes[editingCodeIdx] = { name: title, content };
-        } else {
-            bot.codes.push({ name: title, content });
-        }
-        bot.logs.push(`[BUILD] "${title}" kaydedildi.`);
-        saveData();
-        closeModal('code-modal');
-        renderCodes(bot);
-    }
-
-    function editToken() {
-        const bot = appData.bots.find(b => String(b.id) === String(currentBotId));
-        const t = prompt("Yeni Token Girin:", bot.token);
-        if(t && t.length >= 8) {
-            bot.token = t;
-            bot.logs.push(`[SECURITY] Token güncellendi.`);
-            saveData();
-            alert("Token yenilendi!");
-        }
-    }
-
-    function deleteBot() {
-        if(confirm("Bu botu silmek istediğinize emin misiniz?")) {
-            appData.bots = appData.bots.filter(b => String(b.id) !== String(currentBotId));
-            saveData();
-            exitDetail();
-        }
-    }
-
-    setInterval(() => {
-        if(currentBotId) {
-            const bot = appData.bots.find(b => String(b.id) === String(currentBotId));
-            if(bot) updateTimer(bot);
-        }
-    }, 5000);
+    // Sayfa açıldığında akışı yükle
+    renderFeed();
 </script>
 </body>
 </html>
