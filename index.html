@@ -81,7 +81,7 @@
             overflow-y: auto;
             position: relative;
             padding: 16px;
-            padding-bottom: 70px; /* Alt menü çakışmasın diye yer bıraktık */
+            padding-bottom: 70px;
         }
 
         .view-panel.active { display: flex; }
@@ -186,7 +186,6 @@
             margin-top: 4px;
         }
 
-        /* ALT MENÜ (SABİTLENDİ - Taşma Yapmaz) */
         .bottom-nav {
             position: absolute;
             bottom: 0;
@@ -309,8 +308,9 @@
                 ⚠️ 5 Dakika Cooldown aktif!
             </p>
             <div class="glass-card" style="margin-top:12px;">
-                <h4 style="font-size:0.85rem; margin-bottom:6px; color:var(--text-sub);">Entegre Modül</h4>
-                <p style="font-size:0.8rem;"><i class="fa-solid fa-check" style="color:var(--success)"></i> @jubbio/core { Client, GatewayIntentBits }</p>
+                <h4 style="font-size:0.85rem; margin-bottom:6px; color:var(--text-sub);">Sunucu Durumu</h4>
+                <p style="font-size:0.8rem;"><i class="fa-solid fa-server" style="color:var(--success)"></i> Render Backend Bağlı</p>
+                <p style="font-size:0.8rem; margin-top:4px;"><i class="fa-solid fa-check" style="color:var(--success)"></i> @jubbio/core { Client }</p>
             </div>
         </div>
 
@@ -372,7 +372,9 @@
 </div>
 
 <script>
-    let appData = JSON.parse(localStorage.getItem('bmj_db_v4')) || { bots: [] };
+    const RENDER_BACKEND_URL = "https://bmj-backend.onrender.com";
+
+    let appData = JSON.parse(localStorage.getItem('bmj_db_v5')) || { bots: [] };
     let currentBotId = null;
     let editingCodeIdx = null;
 
@@ -441,7 +443,7 @@ client.login(process.env.TOKEN);`;
     function submitMakeBot() {
         const token = document.getElementById('make-token').value.trim();
         if (!token || token.length < 8) {
-            return alert("HATA: @jubbio/core doğrulaması başarısız! Geçersiz Token.");
+            return alert("HATA: Geçersiz Token!");
         }
 
         const botId = Date.now();
@@ -455,8 +457,7 @@ client.login(process.env.TOKEN);`;
             lastHostApplied: 0,
             codes: [{ name: 'index.js', content: DEFAULT_JUBBIO_TEMPLATE }],
             logs: [
-                `[INIT] @jubbio/core modülü yüklendi.`,
-                `[IMPORT] Client & GatewayIntentBits bağlandı.`,
+                `[INIT] Sunucuya bağlantı hazır.`,
                 `[AUTH] Token doğrulandı.`
             ]
         };
@@ -468,7 +469,7 @@ client.login(process.env.TOKEN);`;
         renderMainScreen();
     }
 
-    function saveData() { localStorage.setItem('bmj_db_v4', JSON.stringify(appData)); }
+    function saveData() { localStorage.setItem('bmj_db_v5', JSON.stringify(appData)); }
 
     function openBotDetail(id) {
         currentBotId = id;
@@ -498,22 +499,42 @@ client.login(process.env.TOKEN);`;
         if(el) el.classList.add('active');
     }
 
-    function addHost() {
+    // RENDER İLE BOTU CANLIYA ALAN FONKSİYON
+    async function addHost() {
         const bot = appData.bots.find(b => String(b.id) === String(currentBotId));
         if(!bot) return;
 
-        const now = Date.now();
-        if(now - bot.lastHostApplied < 300000) {
-            document.getElementById('cd-alert').style.display = 'block';
-            return;
-        }
+        const mainCode = bot.codes.find(c => c.name.endsWith('.js')) || bot.codes[0];
 
-        document.getElementById('cd-alert').style.display = 'none';
-        bot.lastHostApplied = now;
-        bot.activeUntil = Math.max(now, bot.activeUntil) + 3600000;
-        bot.logs.push(`[HOST] Host aktif edildi (+1 Saat).`);
-        saveData();
-        updateTimer(bot);
+        alert("Bot Render sunucusuna tetikleniyor, lütfen bekleyin...");
+
+        try {
+            const res = await fetch(`${RENDER_BACKEND_URL}/api/run-bot`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    botId: bot.id,
+                    token: bot.token,
+                    code: mainCode ? mainCode.content : ''
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                const now = Date.now();
+                bot.lastHostApplied = now;
+                bot.activeUntil = Math.max(now, bot.activeUntil) + 3600000;
+                bot.logs.push(`[ONLINE] Bot Render sunucusunda başarıyla aktifleşti!`);
+                saveData();
+                updateTimer(bot);
+                alert("🟢 BOT ONLINE! Sunucuda canlıya alındı.");
+            } else {
+                alert("⚠️ Hata: " + data.error);
+            }
+        } catch (err) {
+            alert("Render sunucusu uyanıyor olabilir (ilk istek 30sn sürebilir). Lütfen birkaç saniye sonra tekrar deneyin!");
+        }
     }
 
     function updateTimer(bot) {
