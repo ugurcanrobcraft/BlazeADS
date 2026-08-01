@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BMJ - Bot Maker Jubbio</title>
-    <!-- Font & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
@@ -14,12 +13,10 @@
             --bg-darkblue: #090e24;
             --bg-card: rgba(18, 26, 56, 0.75);
             --bg-input: rgba(10, 16, 38, 0.85);
-            
             --neon-blue: #2563eb;
             --neon-purple: #8b5cf6;
             --glow-purple: rgba(139, 92, 246, 0.35);
             --glow-blue: rgba(37, 99, 235, 0.35);
-            
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --border-glow: rgba(139, 92, 246, 0.25);
@@ -41,33 +38,22 @@
             overflow: hidden;
             background-color: var(--bg-black);
             color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .app-container {
             width: 100%;
+            height: 100%;
             max-width: 440px;
-            height: 100dvh;
+            margin: 0 auto;
             background: radial-gradient(circle at top right, #15103a 0%, var(--bg-black) 80%);
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 50px rgba(139, 92, 246, 0.2);
-        }
-
-        @media (min-width: 450px) {
-            .app-container {
-                height: 92vh;
-                border-radius: 28px;
-                border: 1px solid var(--border-glow);
-            }
         }
 
         .app-header {
-            background: rgba(9, 14, 36, 0.9);
+            background: rgba(9, 14, 36, 0.95);
             backdrop-filter: blur(16px);
             padding: 14px;
             text-align: center;
@@ -95,12 +81,14 @@
             overflow-y: auto;
             position: relative;
             padding: 16px;
+            padding-bottom: 70px; /* Alt menü çakışmasın diye yer bıraktık */
         }
 
         .view-panel.active { display: flex; }
 
         #auth-screen {
             justify-content: center;
+            padding-bottom: 16px;
             background: radial-gradient(circle at center, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
         }
 
@@ -128,11 +116,6 @@
             user-select: text;
         }
 
-        .input-box:focus {
-            border-color: var(--neon-purple);
-            box-shadow: 0 0 12px var(--glow-purple);
-        }
-
         .btn {
             width: 100%;
             padding: 12px;
@@ -145,30 +128,14 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: 0.2s;
         }
 
-        .btn-purple {
-            background: linear-gradient(135deg, #6366f1, var(--neon-purple));
-            box-shadow: 0 4px 15px var(--glow-purple);
-        }
-
-        .btn-blue {
-            background: linear-gradient(135deg, #1d4ed8, var(--neon-blue));
-            box-shadow: 0 4px 15px var(--glow-blue);
-        }
-
+        .btn-purple { background: linear-gradient(135deg, #6366f1, var(--neon-purple)); }
+        .btn-blue { background: linear-gradient(135deg, #1d4ed8, var(--neon-blue)); }
         .btn-danger { background: var(--danger); }
         .btn-secondary { background: rgba(255, 255, 255, 0.08); color: var(--text-sub); }
-        .btn:active { transform: scale(0.97); }
 
-        .empty-box {
-            margin: auto;
-            text-align: center;
-            color: var(--text-sub);
-            font-size: 1rem;
-            font-weight: 600;
-        }
+        .empty-box { margin: auto; text-align: center; color: var(--text-sub); font-size: 1rem; }
 
         .bot-list { display: flex; flex-direction: column; gap: 10px; }
 
@@ -185,13 +152,10 @@
             cursor: pointer;
         }
 
-        .bot-card h4 { font-size: 1rem; font-weight: 700; }
-        .bot-card p { font-size: 0.78rem; color: var(--text-sub); margin-top: 2px; }
-
         .fab-btn {
-            position: absolute;
+            position: fixed;
             bottom: 20px;
-            right: 16px;
+            right: 20px;
             background: linear-gradient(135deg, #1d4ed8, var(--neon-blue));
             color: #fff;
             padding: 12px 20px;
@@ -222,34 +186,38 @@
             margin-top: 4px;
         }
 
+        /* ALT MENÜ (SABİTLENDİ - Taşma Yapmaz) */
         .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
             display: flex;
-            background: rgba(9, 14, 36, 0.95);
-            backdrop-filter: blur(12px);
+            background: rgba(9, 14, 36, 0.98);
+            backdrop-filter: blur(16px);
             border-top: 1px solid var(--border-glow);
-            padding: 10px 0;
-            flex-shrink: 0;
+            z-index: 99;
         }
 
         .nav-link {
             flex: 1;
-            text-align: center;
-            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
             color: var(--text-sub);
             cursor: pointer;
             opacity: 0.4;
         }
 
-        .nav-link.active {
-            opacity: 1;
-            color: var(--neon-purple);
-        }
+        .nav-link.active { opacity: 1; color: var(--neon-purple); }
 
         .modal-bg {
             display: none;
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(3, 5, 11, 0.9);
+            background: rgba(3, 5, 11, 0.92);
             backdrop-filter: blur(10px);
             z-index: 100;
             justify-content: center;
@@ -279,7 +247,6 @@
             resize: none;
             user-select: text;
             font-size: 0.78rem;
-            line-height: 1.4;
         }
 
         .logs-area {
@@ -304,7 +271,7 @@
         <h1><i class="fa-solid fa-robot"></i> BMJ - Bot Maker Jubbio</h1>
     </div>
 
-    <!-- GİRİŞ EKRANI -->
+    <!-- 1. GİRİŞ EKRANI -->
     <div id="auth-screen" class="view-panel active">
         <div class="auth-card">
             <h2>Giriş Yap / Kayıt Ol</h2>
@@ -320,50 +287,46 @@
         </div>
     </div>
 
-    <!-- ANA EKRAN -->
+    <!-- 2. ANA EKRAN (BOT LİSTESİ) -->
     <div id="main-screen" class="view-panel">
         <div id="bot-list-box" class="bot-list"></div>
         <div class="fab-btn" onclick="openModal('make-modal')"><i class="fa-solid fa-plus"></i> Make Bot</div>
     </div>
 
-    <!-- BOT ÖZEL SAYFASI -->
-    <div id="detail-screen" class="view-panel" style="padding:0;">
-        <div style="flex:1; padding:16px; overflow-y:auto;">
-            <!-- Tab: Home -->
-            <div id="tab-home" class="tab-sec">
-                <div class="glass-card">
-                    <p style="font-size:0.75rem; color:var(--text-sub);">Bot İsmi</p>
-                    <h2 id="bot-name-txt" style="font-size:1.3rem; margin-top:2px;">-</h2>
-                </div>
-                <div class="glass-card">
-                    <p style="font-size:0.75rem; color:var(--text-sub);">Kalan Aktiflik Müddeti</p>
-                    <div id="host-timer-txt" class="timer-display">Pasif</div>
-                </div>
-                <button class="btn btn-purple" onclick="addHost()"><i class="fa-solid fa-bolt"></i> 1 Saat Host Ver</button>
-                <p id="cd-alert" style="color:var(--danger); font-size:0.75rem; text-align:center; margin-top:6px; display:none;">
-                    ⚠️ 5 Dakika Cooldown aktif!
-                </p>
-                <div class="glass-card" style="margin-top:12px;">
-                    <h4 style="font-size:0.85rem; margin-bottom:6px; color:var(--text-sub);">Yüklü Modüller</h4>
-                    <p style="font-size:0.8rem;"><i class="fa-solid fa-check" style="color:var(--success)"></i> @jubbio/core { Client, GatewayIntentBits }</p>
-                </div>
+    <!-- 3. BOT ÖZEL SAYFASI -->
+    <div id="detail-screen" class="view-panel">
+        <div id="tab-home" class="tab-sec">
+            <div class="glass-card">
+                <p style="font-size:0.75rem; color:var(--text-sub);">Bot İsmi</p>
+                <h2 id="bot-name-txt" style="font-size:1.3rem; margin-top:2px;">-</h2>
             </div>
-
-            <!-- Tab: Codes -->
-            <div id="tab-codes" class="tab-sec" style="display:none;">
-                <button class="btn btn-blue" style="margin-bottom:12px;" onclick="openAddCodeModal()"><i class="fa-solid fa-plus"></i> Yeni Kod Ekle</button>
-                <div id="code-list-box"></div>
+            <div class="glass-card">
+                <p style="font-size:0.75rem; color:var(--text-sub);">Kalan Aktiflik Müddeti</p>
+                <div id="host-timer-txt" class="timer-display">Pasif</div>
             </div>
-
-            <!-- Tab: Settings -->
-            <div id="tab-settings" class="tab-sec" style="display:none;">
-                <button class="btn btn-secondary" style="margin-bottom:8px;" onclick="editToken()"><i class="fa-solid fa-key"></i> Token Düzenle</button>
-                <button class="btn btn-secondary" style="margin-bottom:8px;" onclick="openModal('logs-modal')"><i class="fa-solid fa-terminal"></i> Bot Logları</button>
-                <button class="btn btn-danger" style="margin-bottom:12px;" onclick="deleteBot()"><i class="fa-solid fa-trash"></i> Botu Sil</button>
-                <button class="btn btn-secondary" onclick="exitDetail()"><i class="fa-solid fa-arrow-left"></i> Ana Ekrana Dön</button>
+            <button class="btn btn-purple" onclick="addHost()"><i class="fa-solid fa-bolt"></i> 1 Saat Host Ver</button>
+            <p id="cd-alert" style="color:var(--danger); font-size:0.75rem; text-align:center; margin-top:6px; display:none;">
+                ⚠️ 5 Dakika Cooldown aktif!
+            </p>
+            <div class="glass-card" style="margin-top:12px;">
+                <h4 style="font-size:0.85rem; margin-bottom:6px; color:var(--text-sub);">Entegre Modül</h4>
+                <p style="font-size:0.8rem;"><i class="fa-solid fa-check" style="color:var(--success)"></i> @jubbio/core { Client, GatewayIntentBits }</p>
             </div>
         </div>
 
+        <div id="tab-codes" class="tab-sec" style="display:none;">
+            <button class="btn btn-blue" style="margin-bottom:12px;" onclick="openAddCodeModal()"><i class="fa-solid fa-plus"></i> Yeni Kod Ekle</button>
+            <div id="code-list-box"></div>
+        </div>
+
+        <div id="tab-settings" class="tab-sec" style="display:none;">
+            <button class="btn btn-secondary" style="margin-bottom:8px;" onclick="editToken()"><i class="fa-solid fa-key"></i> Token Düzenle</button>
+            <button class="btn btn-secondary" style="margin-bottom:8px;" onclick="openModal('logs-modal')"><i class="fa-solid fa-terminal"></i> Bot Logları</button>
+            <button class="btn btn-danger" style="margin-bottom:12px;" onclick="deleteBot()"><i class="fa-solid fa-trash"></i> Botu Sil</button>
+            <button class="btn btn-secondary" onclick="exitDetail()"><i class="fa-solid fa-arrow-left"></i> Ana Ekrana Dön</button>
+        </div>
+
+        <!-- SABİT ALT MENÜ -->
         <div class="bottom-nav">
             <div class="nav-link active" onclick="switchTab('home', this)">🏡</div>
             <div class="nav-link" onclick="switchTab('codes', this)">🖥️</div>
@@ -409,7 +372,7 @@
 </div>
 
 <script>
-    let appData = JSON.parse(localStorage.getItem('bmj_db_v3')) || { bots: [] };
+    let appData = JSON.parse(localStorage.getItem('bmj_db_v4')) || { bots: [] };
     let currentBotId = null;
     let editingCodeIdx = null;
 
@@ -477,9 +440,8 @@ client.login(process.env.TOKEN);`;
 
     function submitMakeBot() {
         const token = document.getElementById('make-token').value.trim();
-        
         if (!token || token.length < 8) {
-            return alert("HATA: @jubbio/core doğrulayamadı! Geçersiz Token.");
+            return alert("HATA: @jubbio/core doğrulaması başarısız! Geçersiz Token.");
         }
 
         const botId = Date.now();
@@ -493,9 +455,9 @@ client.login(process.env.TOKEN);`;
             lastHostApplied: 0,
             codes: [{ name: 'index.js', content: DEFAULT_JUBBIO_TEMPLATE }],
             logs: [
-                `[INIT] @jubbio/core yükleniyor...`,
+                `[INIT] @jubbio/core modülü yüklendi.`,
                 `[IMPORT] Client & GatewayIntentBits bağlandı.`,
-                `[AUTH] Token doğrulandı (${token.slice(0, 4)}...).`
+                `[AUTH] Token doğrulandı.`
             ]
         };
 
@@ -506,7 +468,7 @@ client.login(process.env.TOKEN);`;
         renderMainScreen();
     }
 
-    function saveData() { localStorage.setItem('bmj_db_v3', JSON.stringify(appData)); }
+    function saveData() { localStorage.setItem('bmj_db_v4', JSON.stringify(appData)); }
 
     function openBotDetail(id) {
         currentBotId = id;
@@ -608,7 +570,7 @@ client.login(process.env.TOKEN);`;
         } else {
             bot.codes.push({ name: title, content });
         }
-        bot.logs.push(`[BUILD] "${title}" güncellendi.`);
+        bot.logs.push(`[BUILD] "${title}" kaydedildi.`);
         saveData();
         closeModal('code-modal');
         renderCodes(bot);
@@ -619,7 +581,7 @@ client.login(process.env.TOKEN);`;
         const t = prompt("Yeni Token Girin:", bot.token);
         if(t && t.length >= 8) {
             bot.token = t;
-            bot.logs.push(`[SECURITY] Token yenilendi.`);
+            bot.logs.push(`[SECURITY] Token güncellendi.`);
             saveData();
             alert("Token yenilendi!");
         }
