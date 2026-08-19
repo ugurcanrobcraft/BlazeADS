@@ -172,7 +172,7 @@
             text-align: center;
             color: var(--text-sub);
             margin-top: 60px;
-            font-size: 0.95srem;
+            font-size: 0.95rem;
         }
 
         /* MODAL (PANEL) */
@@ -288,7 +288,7 @@
 
     <!-- REKLAM AKIŞI -->
     <div id="feed-box" class="feed-container">
-        <!-- Reklamlar buraya dinamik gelecek -->
+        <!-- Reklamlar Upstash'ten dinamik çekilecek -->
     </div>
 </div>
 
@@ -328,42 +328,71 @@
 </div>
 
 <script>
-    // LocalStorage veri yapısı
-    let blazeadsData = JSON.parse(localStorage.getItem('blazeads_db_v1')) || { ads: [], lastPublished: 0 };
+    // Upstash Redis Bağlantı Bilgileri
+    const UPSTASH_URL = "https://internal-buck-175539.upstash.io";
+    const UPSTASH_TOKEN = "gQAAAAAAAq2zAAIgcDE4YTJhNWFkNGRlMjM0MWYxOWViY2UzZGQxZDYxODFhMA";
 
-    function renderFeed() {
+    // Redis İstek Fonksiyonu
+    async function queryUpstash(command) {
+        try {
+            const res = await fetch(UPSTASH_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${UPSTASH_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(command)
+            });
+            return await res.json();
+        } catch (err) {
+            console.error("Upstash Bağlantı Hatası:", err);
+            return null;
+        }
+    }
+
+    // Reklamları Çek ve Göster
+    async function renderFeed() {
         const feedBox = document.getElementById('feed-box');
-        feedBox.innerHTML = '';
+        feedBox.innerHTML = `<div class="empty-feed"><i class="fa-solid fa-spinner fa-spin"></i> Reklamlar yükleniyor...</div>`;
 
-        if (blazeadsData.ads.length === 0) {
+        // Redis'ten en son eklenen 100 reklamı getir
+        const data = await queryUpstash(["LRANGE", "blazeads_ads", "0", "99"]);
+
+        if (!data || !data.result || data.result.length === 0) {
             feedBox.innerHTML = `<div class="empty-feed">Henüz hiç reklam yayınlanmamış.<br>İlk reklamı sen oluştur! 🚀</div>`;
             return;
         }
 
-        // En son yayınlanan en üstte görünmesi için dizi aynen basılır (yeni eklenenler unshift ile başa ekleniyor)
-        blazeadsData.ads.forEach(ad => {
-            const card = document.createElement('div');
-            card.className = 'ad-card';
-            card.innerHTML = `
-                <div class="ad-header-info">
-                    <span class="ad-title">${escapeHtml(ad.serverName)}</span>
-                    <span class="ad-owner"><i class="fa-solid fa-crown" style="color:#fbbf24"></i> ${escapeHtml(ad.ownerName)}</span>
-                </div>
-                <div class="ad-desc">${escapeHtml(ad.serverDesc)}</div>
-                <div class="ad-footer">
-                    <span class="ad-time"><i class="fa-regular fa-clock"></i> ${ad.timeStr}</span>
-                    <a href="${escapeHtml(ad.inviteLink)}" target="_blank" class="join-btn"><i class="fa-solid fa-right-to-bracket"></i> Sunucuya Katıl</a>
-                </div>
-            `;
-            feedBox.appendChild(card);
+        feedBox.innerHTML = '';
+
+        data.result.forEach(rawItem => {
+            try {
+                const ad = JSON.parse(rawItem);
+                const card = document.createElement('div');
+                card.className = 'ad-card';
+                card.innerHTML = `
+                    <div class="ad-header-info">
+                        <span class="ad-title">${escapeHtml(ad.serverName)}</span>
+                        <span class="ad-owner"><i class="fa-solid fa-crown" style="color:#fbbf24"></i> ${escapeHtml(ad.ownerName)}</span>
+                    </div>
+                    <div class="ad-desc">${escapeHtml(ad.serverDesc)}</div>
+                    <div class="ad-footer">
+                        <span class="ad-time"><i class="fa-regular fa-clock"></i> ${escapeHtml(ad.timeStr)}</span>
+                        <a href="${escapeHtml(ad.inviteLink)}" target="_blank" class="join-btn"><i class="fa-solid fa-right-to-bracket"></i> Sunucuya Katıl</a>
+                    </div>
+                `;
+                feedBox.appendChild(card);
+            } catch (e) {
+                console.error("Reklam ayrıştırma hatası:", e);
+            }
         });
     }
 
     function openAdModal() {
-        // Cooldown Kontrolü
+        const lastPublished = parseInt(localStorage.getItem('blazeads_last_published') || '0');
         const now = Date.now();
-        const diff = now - blazeadsData.lastPublished;
-        const cooldownTime = 3600 * 1000; // 1 Saat (milisaniye)
+        const diff = now - lastPublished;
+        const cooldownTime = 3600 * 1000; // 1 Saat
 
         const cdBox = document.getElementById('cooldown-box');
         const pubBtn = document.getElementById('publish-btn');
@@ -400,13 +429,12 @@
         }
     }
 
-    function publishAd() {
+    async function publishAd() {
         const serverName = document.getElementById('server-name').value.trim();
         const serverDesc = document.getElementById('server-desc').value.trim();
         const ownerName = document.getElementById('owner-name').value.trim();
         const inviteLink = document.getElementById('invite-link').value.trim();
 
-        // Doğrulamalar
         if (serverName.length < 3) {
             return alert("Sunucu ismi en az 3 karakter olmalıdır!");
         }
@@ -420,7 +448,10 @@
             return alert("Davet linki mutlaka 'https://jubbio.com/invite/' ile başlamalıdır!");
         }
 
-        // Yeni reklam nesnesi
+        const pubBtn = document.getElementById('publish-btn');
+        pubBtn.disabled = true;
+        pubBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Yayınlanıyor...`;
+
         const newAd = {
             serverName,
             serverDesc,
@@ -429,29 +460,34 @@
             timeStr: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'})
         };
 
-        // En son yayınlanan en üstte olması için unshift kullanıyoruz
-        blazeadsData.ads.unshift(newAd);
-        blazeadsData.lastPublished = Date.now();
+        // En başa ekleme işlemi (LPUSH)
+        const response = await queryUpstash(["LPUSH", "blazeads_ads", JSON.stringify(newAd)]);
 
-        // Kaydet ve yenile
-        localStorage.setItem('blazeads_db_v1', JSON.stringify(blazeadsData));
-        closeAdModal();
-        renderFeed();
+        pubBtn.disabled = false;
+        pubBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Yayınla`;
 
-        // Formu temizle
-        document.getElementById('server-name').value = '';
-        document.getElementById('server-desc').value = '';
-        document.getElementById('owner-name').value = '';
-        document.getElementById('invite-link').value = '';
-        document.getElementById('char-counter').innerText = '0';
+        if (response && response.result !== undefined) {
+            localStorage.setItem('blazeads_last_published', Date.now().toString());
+            closeAdModal();
+            renderFeed();
+
+            document.getElementById('server-name').value = '';
+            document.getElementById('server-desc').value = '';
+            document.getElementById('owner-name').value = '';
+            document.getElementById('invite-link').value = '';
+            document.getElementById('char-counter').innerText = '0';
+        } else {
+            alert("Reklam yayınlanırken bir hata oluştu. Lütfen tekrar deneyin!");
+        }
     }
 
     function escapeHtml(str) {
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
-    // Sayfa açıldığında akışı yükle
+    // Sayfa açıldığında canlı verileri çek
     renderFeed();
 </script>
 </body>
 </html>
+
