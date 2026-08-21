@@ -15,6 +15,7 @@
             --bg-input: rgba(10, 16, 38, 0.85);
             --neon-blue: #2563eb;
             --neon-purple: #8b5cf6;
+            --neon-gold: #f59e0b;
             --glow-blue: rgba(37, 99, 235, 0.35);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
@@ -23,258 +24,94 @@
             --success: #10b981;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0; padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-black);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; height: 100%; background-color: var(--bg-black); color: var(--text-main); overflow-x: hidden; }
 
         .app-container {
-            width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
+            width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh;
             background: radial-gradient(circle at top right, #10173a 0%, var(--bg-black) 70%);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            padding-bottom: 40px;
+            display: flex; flex-direction: column; position: relative; padding-bottom: 40px;
         }
 
-        /* HEADER */
         .app-header {
-            background: rgba(9, 14, 36, 0.95);
-            backdrop-filter: blur(16px);
-            padding: 14px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-glow);
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            background: rgba(9, 14, 36, 0.95); backdrop-filter: blur(16px);
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border-glow); position: sticky; top: 0; z-index: 10;
         }
 
         .app-header h1 {
-            font-size: 1.2rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, #60a5fa, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 1.1rem; font-weight: 800; background: linear-gradient(90deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px;
         }
 
-        /* MAVİ + BUTON */
-        .add-fab-btn {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #fff;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px var(--glow-blue);
-            border: none;
-            transition: transform 0.2s;
-        }
-        .add-fab-btn:active { transform: scale(0.9); }
+        .header-actions { display: flex; gap: 8px; align-items: center; }
 
-        /* REKLAM AKIŞ ALANI */
-        .feed-container {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.08); color: #fff; width: 36px; height: 36px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); transition: transform 0.2s;
         }
+        .icon-btn:active { transform: scale(0.9); }
+        .add-fab-btn { background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; box-shadow: 0 4px 15px var(--glow-blue); }
+        .pin-fab-btn { background: linear-gradient(135deg, #f59e0b, #d97706); border: none; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); display: none; }
+
+        .feed-container { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
 
         .ad-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glow);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid var(--border-glow);
+            border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4); position: relative;
         }
 
-        .ad-header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+        .ad-card.pinned-card {
+            border: 1px solid var(--neon-gold);
+            background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, var(--bg-card) 100%);
         }
 
-        .ad-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #fff;
+        .pinned-badge {
+            align-self: flex-start; background: var(--neon-gold); color: #000; font-size: 0.65rem;
+            font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase;
         }
 
-        .ad-owner {
-            font-size: 0.75rem;
-            color: var(--text-sub);
-            background: rgba(255,255,255,0.05);
-            padding: 3px 8px;
-            border-radius: 6px;
-        }
+        .ad-header-info { display: flex; justify-content: space-between; align-items: flex-start; }
+        .ad-title { font-size: 1.05rem; font-weight: 700; color: #fff; }
+        .ad-owner { font-size: 0.75rem; color: var(--text-sub); background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 6px; }
 
+        /* MARKDOWN VE SATIR SONU DÜZELTMELERİ */
         .ad-desc {
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            line-height: 1.4;
-            word-break: break-word;
+            font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; word-break: break-word;
+            white-space: pre-wrap; /* Alt satıra geçmeyi sağlar */
         }
+        .ad-desc h1, .ad-desc h2 { font-size: 1.1rem; font-weight: 800; color: #60a5fa; margin: 6px 0 2px 0; }
+        .ad-desc strong { color: #fff; font-weight: 700; }
 
-        .ad-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 4px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 10px;
-        }
+        .ad-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+        .ad-time { font-size: 0.7rem; color: var(--text-sub); font-family: 'JetBrains Mono', monospace; }
+        .join-btn { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 6px; }
 
-        .ad-time {
-            font-size: 0.7rem;
-            color: var(--text-sub);
-            font-family: 'JetBrains Mono', monospace;
-        }
+        .empty-feed { text-align: center; color: var(--text-sub); margin-top: 60px; font-size: 0.95rem; }
 
-        .join-btn {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        /* MODALLAR */
+        .modal-bg { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(3, 5, 11, 0.85); backdrop-filter: blur(10px); z-index: 100; justify-content: center; align-items: center; padding: 16px; }
+        .modal-box { background: var(--bg-darkblue); width: 100%; max-width: 420px; padding: 20px; border-radius: 20px; border: 1px solid var(--border-glow); box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 12px; max-height: 90vh; overflow-y: auto; }
+        .modal-box h3 { font-size: 1.1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 
-        .empty-feed {
-            text-align: center;
-            color: var(--text-sub);
-            margin-top: 60px;
-            font-size: 0.95rem;
-        }
-
-        /* MODAL (PANEL) */
-        .modal-bg {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(3, 5, 11, 0.85);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
-
-        .modal-box {
-            background: var(--bg-darkblue);
-            width: 100%;
-            max-width: 420px;
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid var(--border-glow);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-box h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .input-group label {
-            font-size: 0.75rem;
-            color: var(--text-sub);
-            font-weight: 600;
-        }
-
-        .input-box {
-            width: 100%;
-            padding: 11px 14px;
-            background: var(--bg-input);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: #fff;
-            outline: none;
-            font-size: 0.85rem;
-        }
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        .input-group label { font-size: 0.75rem; color: var(--text-sub); font-weight: 600; }
+        .input-box { width: 100%; padding: 11px 14px; background: var(--bg-input); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; outline: none; font-size: 0.85rem; }
         .input-box:focus { border-color: var(--neon-blue); }
+        textarea.input-box { resize: none; height: 100px; }
+        .char-count { font-size: 0.7rem; color: var(--text-sub); text-align: right; }
 
-        textarea.input-box {
-            resize: none;
-            height: 90px;
-        }
-
-        .char-count {
-            font-size: 0.7rem;
-            color: var(--text-sub);
-            text-align: right;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; }
         .btn-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; }
+        .btn-gold { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
         .btn-secondary { background: rgba(255, 255, 255, 0.08); color: var(--text-sub); }
 
-        .cooldown-alert {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #f87171;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            text-align: center;
-            display: none;
-        }
+        .cooldown-alert { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 10px; border-radius: 10px; font-size: 0.8rem; text-align: center; display: none; }
+        .tab-buttons { display: flex; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 10px; gap: 4px; }
+        .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-sub); font-weight: 600; border-radius: 8px; cursor: pointer; }
+        .tab-btn.active { background: var(--neon-blue); color: #fff; }
     </style>
 </head>
 <body>
@@ -283,22 +120,47 @@
     <!-- HEADER -->
     <div class="app-header">
         <h1><i class="fa-solid fa-bullhorn" style="color:#3b82f6"></i> BlazeADS</h1>
-        <button class="add-fab-btn" onclick="openAdModal()"><i class="fa-solid fa-plus"></i></button>
+        <div class="header-actions">
+            <button id="pin-btn" class="icon-btn pin-fab-btn" onclick="openPinAdModal()" title="Sabit Reklam Ver"><i class="fa-solid fa-thumbtack"></i></button>
+            <button class="icon-btn add-fab-btn" onclick="openAdModal()" title="Reklam Ver"><i class="fa-solid fa-plus"></i></button>
+            <button id="auth-btn" class="icon-btn" onclick="openAuthModal()" title="Giriş Yap"><i class="fa-solid fa-user"></i></button>
+        </div>
     </div>
 
     <!-- REKLAM AKIŞI -->
-    <div id="feed-box" class="feed-container">
-        <!-- Reklamlar Upstash'ten dinamik çekilecek -->
+    <div id="feed-box" class="feed-container"></div>
+</div>
+
+<!-- GİRİŞ / KAYIT MODALI -->
+<div id="auth-modal" class="modal-bg">
+    <div class="modal-box">
+        <div class="tab-buttons">
+            <button id="tab-login" class="tab-btn active" onclick="switchAuthTab('login')">Giriş Yap</button>
+            <button id="tab-register" class="tab-btn" onclick="switchAuthTab('register')">Kayıt Ol</button>
+        </div>
+
+        <div id="auth-form" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="input-group">
+                <label>Kullanıcı Adı (küçük ingilizce harf ve 0-9, min 3 kr.)</label>
+                <input type="text" id="auth-user" class="input-box" placeholder="username">
+            </div>
+            <div class="input-group">
+                <label>Şifre (küçük ingilizce harf ve 0-9, min 8 kr.)</label>
+                <input type="password" id="auth-pass" class="input-box" placeholder="********">
+            </div>
+            <button id="auth-submit-btn" class="btn btn-blue" onclick="handleAuthSubmit()">Giriş Yap</button>
+        </div>
+        <button class="btn btn-secondary" onclick="closeAuthModal()">Kapat</button>
     </div>
 </div>
 
-<!-- REKLAM OLUŞTURMA MODALI -->
+<!-- SADE REKLAM OLUŞTURMA MODALI -->
 <div id="ad-modal" class="modal-bg">
     <div class="modal-box">
         <h3><i class="fa-solid fa-rectangle-ad" style="color:var(--neon-blue)"></i> Sunucu Reklamı Yayınla</h3>
         
         <div id="cooldown-box" class="cooldown-alert">
-            ⚠️ Yeni reklam yayınlamak için <span id="cd-time">1:00:00</span> beklemelisin!
+            ⚠️ Yeni reklam yayınlamak için <span id="cd-time">2:00:00</span> beklemelisin!
         </div>
 
         <div class="input-group">
@@ -307,14 +169,14 @@
         </div>
 
         <div class="input-group">
-            <label>Açıklama (En az 50 karakter)</label>
+            <label>Açıklama (En az 50 karakter - # Başlık, **Kalın** destekler)</label>
             <textarea id="server-desc" class="input-box" placeholder="Sunucunuzdan bahsedin..." oninput="updateCharCount()"></textarea>
             <div class="char-count"><span id="char-counter">0</span> / 50 min</div>
         </div>
 
         <div class="input-group">
             <label>Owner İsim</label>
-            <input type="text" id="owner-name" class="input-box" placeholder="Örn: Elmir">
+            <input type="text" id="owner-name" class="input-box" placeholder="Örn: elmir">
         </div>
 
         <div class="input-group">
@@ -322,82 +184,287 @@
             <input type="text" id="invite-link" class="input-box" placeholder="https://jubbio.com/invite/m2awfr8x">
         </div>
 
-        <button id="publish-btn" class="btn btn-blue" onclick="publishAd()"><i class="fa-solid fa-paper-plane"></i> Yayınla</button>
+        <button id="publish-btn" class="btn btn-blue" onclick="publishAd(false)"><i class="fa-solid fa-paper-plane"></i> Yayınla</button>
         <button class="btn btn-secondary" onclick="closeAdModal()">İptal</button>
     </div>
 </div>
 
+<!-- SABİT REKLAM MODALI (YÖNETİCİ) -->
+<div id="pin-modal" class="modal-bg">
+    <div class="modal-box">
+        <h3><i class="fa-solid fa-thumbtack" style="color:var(--neon-gold)"></i> Sabit Reklam Yayınla (📌)</h3>
+
+        <div class="input-group">
+            <label>Sabit Kalma Süresi</label>
+            <select id="pin-duration" class="input-box">
+                <option value="3600000">1 Saat</option>
+                <option value="10800000">3 Saat</option>
+                <option value="86400000">1 Gün</option>
+                <option value="259200000">3 Gün</option>
+                <option value="432000000">5 Gün</option>
+                <option value="604800000">7 Gün</option>
+                <option value="1209600000">14 Gün</option>
+                <option value="2592000000">30 Gün</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Sunucu İsmi</label>
+            <input type="text" id="pin-server-name" class="input-box" placeholder="Örn: VIP Topluluk">
+        </div>
+
+        <div class="input-group">
+            <label>Açıklama</label>
+            <textarea id="pin-server-desc" class="input-box" placeholder="Açıklama girin..."></textarea>
+        </div>
+
+        <div class="input-group">
+            <label>Owner İsim</label>
+            <input type="text" id="pin-owner-name" class="input-box" placeholder="blazeads" value="blazeads" readonly>
+        </div>
+
+        <div class="input-group">
+            <label>Davet Linki</label>
+            <input type="text" id="pin-invite-link" class="input-box" placeholder="https://jubbio.com/invite/...">
+        </div>
+
+        <button id="pin-publish-btn" class="btn btn-gold" onclick="publishAd(true)"><i class="fa-solid fa-thumbtack"></i> Sabit Reklamı Yayınla</button>
+        <button class="btn btn-secondary" onclick="closePinModal()">İptal</button>
+    </div>
+</div>
+
 <script>
-    // Upstash Redis Bağlantı Bilgileri
     const UPSTASH_URL = "https://internal-buck-175539.upstash.io";
     const UPSTASH_TOKEN = "gQAAAAAAAq2zAAIgcDE4YTJhNWFkNGRlMjM0MWYxOWViY2UzZGQxZDYxODFhMA";
 
-    // Redis İstek Fonksiyonu
+    let currentUser = JSON.parse(localStorage.getItem('blazeads_user')) || null;
+    let authTabMode = 'login';
+
     async function queryUpstash(command) {
         try {
             const res = await fetch(UPSTASH_URL, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${UPSTASH_TOKEN}`,
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Authorization': `Bearer ${UPSTASH_TOKEN}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify(command)
             });
             return await res.json();
         } catch (err) {
-            console.error("Upstash Bağlantı Hatası:", err);
+            console.error("Upstash Error:", err);
             return null;
         }
     }
 
-    // Reklamları Çek ve Göster
+    // YÖNETİCİ HESABINI OTOMATİK OLUŞTUR
+    async function initAdminAccount() {
+        const adminRes = await queryUpstash(["GET", "user:blazeads"]);
+        if (!adminRes || !adminRes.result) {
+            await queryUpstash(["SET", "user:blazeads", JSON.stringify({
+                username: "blazeads",
+                password: "adsforjubbio99",
+                lastLogin: Date.now()
+            })]);
+        }
+    }
+
+    // MARKDOWN PARSER (Alt satır, **kalın**, # Başlık desteği)
+    function parseDescription(str) {
+        let text = escapeHtml(str);
+        // # Başlık Desteği
+        text = text.replace(/^# (.*$)/gim, '<h2>$1</h2>');
+        // **Kalın** Desteği
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        return text;
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    // REKLAMLARI YÜKLE VE ZAMAN AŞIMLARINI TEMİZLE
     async function renderFeed() {
         const feedBox = document.getElementById('feed-box');
         feedBox.innerHTML = `<div class="empty-feed"><i class="fa-solid fa-spinner fa-spin"></i> Reklamlar yükleniyor...</div>`;
 
-        // Redis'ten en son eklenen 100 reklamı getir
-        const data = await queryUpstash(["LRANGE", "blazeads_ads", "0", "99"]);
+        const now = Date.now();
+        let htmlContent = '';
 
-        if (!data || !data.result || data.result.length === 0) {
-            feedBox.innerHTML = `<div class="empty-feed">Henüz hiç reklam yayınlanmamış.<br>İlk reklamı sen oluştur! 🚀</div>`;
+        // 1. SABİT REKLAM KONTROLÜ
+        const pinRes = await queryUpstash(["GET", "blazeads_pinned"]);
+        if (pinRes && pinRes.result) {
+            const pinnedAd = JSON.parse(pinRes.result);
+            if (now > pinnedAd.expireAt) {
+                // Süre dolduysa sil
+                await queryUpstash(["DEL", "blazeads_pinned"]);
+            } else {
+                htmlContent += `
+                    <div class="ad-card pinned-card">
+                        <div class="pinned-badge"><i class="fa-solid fa-thumbtack"></i> Sabit Reklam</div>
+                        <div class="ad-header-info">
+                            <span class="ad-title">${escapeHtml(pinnedAd.serverName)}</span>
+                            <span class="ad-owner"><i class="fa-solid fa-crown" style="color:#fbbf24"></i> ${escapeHtml(pinnedAd.ownerName)}</span>
+                        </div>
+                        <div class="ad-desc">${parseDescription(pinnedAd.serverDesc)}</div>
+                        <div class="ad-footer">
+                            <span class="ad-time"><i class="fa-regular fa-clock"></i> ${pinnedAd.timeStr}</span>
+                            <a href="${escapeHtml(pinnedAd.inviteLink)}" target="_blank" class="join-btn"><i class="fa-solid fa-right-to-bracket"></i> Sunucuya Katıl</a>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        // 2. NORMAL REKLAMLAR
+        const adsRes = await queryUpstash(["LRANGE", "blazeads_ads", "0", "100"]);
+        let validAds = [];
+        let needsCleanup = false;
+
+        if (adsRes && adsRes.result && adsRes.result.length > 0) {
+            adsRes.result.forEach(rawItem => {
+                try {
+                    const ad = JSON.parse(rawItem);
+                    // 24 saat kontrolü (24 * 3600 * 1000 = 86400000 ms)
+                    if (now - ad.createdAt < 86400000) {
+                        validAds.push(ad);
+                    } else {
+                        needsCleanup = true;
+                    }
+                } catch (e) {}
+            });
+
+            // 24 saati geçen reklamlar varsa Redis listesini güncelle
+            if (needsCleanup) {
+                await queryUpstash(["DEL", "blazeads_ads"]);
+                for (let i = validAds.length - 1; i >= 0; i--) {
+                    await queryUpstash(["RPUSH", "blazeads_ads", JSON.stringify(validAds[i])]);
+                }
+            }
+
+            validAds.forEach(ad => {
+                htmlContent += `
+                    <div class="ad-card">
+                        <div class="ad-header-info">
+                            <span class="ad-title">${escapeHtml(ad.serverName)}</span>
+                            <span class="ad-owner"><i class="fa-solid fa-crown" style="color:#fbbf24"></i> ${escapeHtml(ad.ownerName)}</span>
+                        </div>
+                        <div class="ad-desc">${parseDescription(ad.serverDesc)}</div>
+                        <div class="ad-footer">
+                            <span class="ad-time"><i class="fa-regular fa-clock"></i> ${ad.timeStr}</span>
+                            <a href="${escapeHtml(ad.inviteLink)}" target="_blank" class="join-btn"><i class="fa-solid fa-right-to-bracket"></i> Sunucuya Katıl</a>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        if (htmlContent === '') {
+            feedBox.innerHTML = `<div class="empty-feed">Henüz aktif reklam bulunmuyor.<br>İlk reklamı sen oluştur! 🚀</div>`;
+        } else {
+            feedBox.innerHTML = htmlContent;
+        }
+    }
+
+    // KULLANICI GİRİŞ / KAYIT İŞLEMLERİ
+    function openAuthModal() {
+        if (currentUser) {
+            if (confirm(`@${currentUser.username} hesabından çıkış yapmak istiyor musunuz?`)) {
+                currentUser = null;
+                localStorage.removeItem('blazeads_user');
+                updateUserUI();
+            }
+            return;
+        }
+        document.getElementById('auth-modal').style.display = 'flex';
+    }
+
+    function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
+
+    function switchAuthTab(mode) {
+        authTabMode = mode;
+        document.getElementById('tab-login').className = mode === 'login' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('tab-register').className = mode === 'register' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('auth-submit-btn').innerText = mode === 'login' ? 'Giriş Yap' : 'Kayıt Ol';
+    }
+
+    async function handleAuthSubmit() {
+        const u = document.getElementById('auth-user').value.trim().toLowerCase();
+        const p = document.getElementById('auth-pass').value.trim().toLowerCase();
+
+        const userRegex = /^[a-z0-9]{3,}$/;
+        const passRegex = /^[a-z0-9]{8,}$/;
+
+        if (!userRegex.test(u)) return alert("Username ingilizce küçük harf ve rakamlardan oluşmalı, en az 3 karakter olmalıdır!");
+        if (!passRegex.test(p)) return alert("Şifre ingilizce küçük harf ve rakamlardan oluşmalı, en az 8 karakter olmalıdır!");
+
+        const userKey = `user:${u}`;
+        const res = await queryUpstash(["GET", userKey]);
+
+        if (authTabMode === 'register') {
+            if (res && res.result) return alert("Dolu username");
+
+            const newUser = { username: u, password: p, lastLogin: Date.now() };
+            await queryUpstash(["SET", userKey, JSON.stringify(newUser)]);
+            currentUser = newUser;
+            localStorage.setItem('blazeads_user', JSON.stringify(currentUser));
+            alert("Başarıyla kayıt olundu!");
+            closeAuthModal();
+            updateUserUI();
+
+        } else {
+            if (!res || !res.result) return alert("Kullanıcı bulunamadı!");
+            const userData = JSON.parse(res.result);
+
+            // 1 AY İNAKTİFLİK KONTROLÜ (30 * 24 * 3600 * 1000 ms)
+            if (Date.now() - userData.lastLogin > 2592000000) {
+                await queryUpstash(["DEL", userKey]);
+                return alert("1 ay boyunca hesaba girilmediği için bu hesap silindi!");
+            }
+
+            if (userData.password !== p) return alert("Şifre hatalı");
+
+            userData.lastLogin = Date.now();
+            await queryUpstash(["SET", userKey, JSON.stringify(userData)]);
+
+            currentUser = userData;
+            localStorage.setItem('blazeads_user', JSON.stringify(currentUser));
+            alert("Başarıyla giriş yapıldı!");
+            closeAuthModal();
+            updateUserUI();
+        }
+    }
+
+    function updateUserUI() {
+        const pinBtn = document.getElementById('pin-btn');
+        const authBtn = document.getElementById('auth-btn');
+
+        if (currentUser) {
+            authBtn.innerHTML = `<i class="fa-solid fa-user-check" style="color:var(--success)"></i>`;
+            if (currentUser.username === 'blazeads') {
+                pinBtn.style.display = 'flex';
+            } else {
+                pinBtn.style.display = 'none';
+            }
+            document.getElementById('owner-name').value = currentUser.username;
+        } else {
+            authBtn.innerHTML = `<i class="fa-solid fa-user"></i>`;
+            pinBtn.style.display = 'none';
+            document.getElementById('owner-name').value = '';
+        }
+    }
+
+    // REKLAM VERME & SÜRE KONTROLLLERİ (2 SAAT COOLDOWN)
+    function openAdModal() {
+        if (!currentUser) {
+            alert("Reklam verebilmek için önce giriş yapmalısınız!");
+            openAuthModal();
             return;
         }
 
-        feedBox.innerHTML = '';
-
-        data.result.forEach(rawItem => {
-            try {
-                const ad = JSON.parse(rawItem);
-                const card = document.createElement('div');
-                card.className = 'ad-card';
-                card.innerHTML = `
-                    <div class="ad-header-info">
-                        <span class="ad-title">${escapeHtml(ad.serverName)}</span>
-                        <span class="ad-owner"><i class="fa-solid fa-crown" style="color:#fbbf24"></i> ${escapeHtml(ad.ownerName)}</span>
-                    </div>
-                    <div class="ad-desc">${escapeHtml(ad.serverDesc)}</div>
-                    <div class="ad-footer">
-                        <span class="ad-time"><i class="fa-regular fa-clock"></i> ${escapeHtml(ad.timeStr)}</span>
-                        <a href="${escapeHtml(ad.inviteLink)}" target="_blank" class="join-btn"><i class="fa-solid fa-right-to-bracket"></i> Sunucuya Katıl</a>
-                    </div>
-                `;
-                feedBox.appendChild(card);
-            } catch (e) {
-                console.error("Reklam ayrıştırma hatası:", e);
-            }
-        });
-    }
-
-    function openAdModal() {
-        const lastPublished = parseInt(localStorage.getItem('blazeads_last_published') || '0');
-        const now = Date.now();
-        const diff = now - lastPublished;
-        const cooldownTime = 3600 * 1000; // 1 Saat
+        const lastPublished = parseInt(localStorage.getItem(`blazeads_last_pub_${currentUser.username}`) || '0');
+        const diff = Date.now() - lastPublished;
+        const cooldownTime = 2 * 3600 * 1000; // 2 Saat
 
         const cdBox = document.getElementById('cooldown-box');
         const pubBtn = document.getElementById('publish-btn');
 
-        if (diff < cooldownTime) {
+        if (diff < cooldownTime && currentUser.username !== 'blazeads') {
             const remainingSecs = Math.ceil((cooldownTime - diff) / 1000);
             const mins = Math.floor(remainingSecs / 60);
             const secs = remainingSecs % 60;
@@ -414,80 +481,61 @@
         document.getElementById('ad-modal').style.display = 'flex';
     }
 
-    function closeAdModal() {
-        document.getElementById('ad-modal').style.display = 'none';
-    }
+    function closeAdModal() { document.getElementById('ad-modal').style.display = 'none'; }
+    function openPinAdModal() { document.getElementById('pin-modal').style.display = 'flex'; }
+    function closePinModal() { document.getElementById('pin-modal').style.display = 'none'; }
 
     function updateCharCount() {
         const text = document.getElementById('server-desc').value;
         const counter = document.getElementById('char-counter');
         counter.innerText = text.length;
-        if(text.length >= 50) {
-            counter.style.color = 'var(--success)';
-        } else {
-            counter.style.color = 'var(--text-sub)';
-        }
+        counter.style.color = text.length >= 50 ? 'var(--success)' : 'var(--text-sub)';
     }
 
-    async function publishAd() {
-        const serverName = document.getElementById('server-name').value.trim();
-        const serverDesc = document.getElementById('server-desc').value.trim();
-        const ownerName = document.getElementById('owner-name').value.trim();
-        const inviteLink = document.getElementById('invite-link').value.trim();
+    async function publishAd(isPinned) {
+        const prefix = isPinned ? 'pin-' : '';
+        const serverName = document.getElementById(`${prefix}server-name`).value.trim();
+        const serverDesc = document.getElementById(`${prefix}server-desc`).value.trim();
+        const ownerName = document.getElementById(`${prefix}owner-name`).value.trim();
+        const inviteLink = document.getElementById(`${prefix}invite-link`).value.trim();
 
-        if (serverName.length < 3) {
-            return alert("Sunucu ismi en az 3 karakter olmalıdır!");
-        }
-        if (serverDesc.length < 50) {
-            return alert("Açıklama en az 50 karakter olmalıdır!");
-        }
-        if (!ownerName) {
-            return alert("Lütfen Owner ismini girin!");
-        }
-        if (!inviteLink.startsWith("https://jubbio.com/invite/")) {
-            return alert("Davet linki mutlaka 'https://jubbio.com/invite/' ile başlamalıdır!");
-        }
+        if (serverName.length < 3) return alert("Sunucu ismi en az 3 karakter olmalıdır!");
+        if (serverDesc.length < 50) return alert("Açıklama en az 50 karakter olmalıdır!");
+        if (!ownerName) return alert("Lütfen Owner ismini girin!");
+        if (!inviteLink.startsWith("https://jubbio.com/invite/")) return alert("Davet linki mutlaka 'https://jubbio.com/invite/' ile başlamalıdır!");
 
-        const pubBtn = document.getElementById('publish-btn');
-        pubBtn.disabled = true;
-        pubBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Yayınlanıyor...`;
+        const btn = document.getElementById(isPinned ? 'pin-publish-btn' : 'publish-btn');
+        btn.disabled = true;
 
-        const newAd = {
-            serverName,
-            serverDesc,
-            ownerName,
-            inviteLink,
-            timeStr: new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'})
-        };
+        const now = Date.now();
+        const timeStr = new Date().toLocaleDateString('tr-TR') + ' ' + new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'});
 
-        // En başa ekleme işlemi (LPUSH)
-        const response = await queryUpstash(["LPUSH", "blazeads_ads", JSON.stringify(newAd)]);
+        if (isPinned) {
+            const durationMs = parseInt(document.getElementById('pin-duration').value);
+            const pinnedObj = {
+                serverName, serverDesc, ownerName, inviteLink,
+                createdAt: now,
+                expireAt: now + durationMs,
+                timeStr
+            };
 
-        pubBtn.disabled = false;
-        pubBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Yayınla`;
-
-        if (response && response.result !== undefined) {
-            localStorage.setItem('blazeads_last_published', Date.now().toString());
+            await queryUpstash(["SET", "blazeads_pinned", JSON.stringify(pinnedObj)]);
+            closePinModal();
+        } else {
+            const newAd = { serverName, serverDesc, ownerName, inviteLink, createdAt: now, timeStr };
+            await queryUpstash(["LPUSH", "blazeads_ads", JSON.stringify(newAd)]);
+            localStorage.setItem(`blazeads_last_pub_${currentUser.username}`, now.toString());
             closeAdModal();
-            renderFeed();
-
-            document.getElementById('server-name').value = '';
-            document.getElementById('server-desc').value = '';
-            document.getElementById('owner-name').value = '';
-            document.getElementById('invite-link').value = '';
-            document.getElementById('char-counter').innerText = '0';
-        } else {
-            alert("Reklam yayınlanırken bir hata oluştu. Lütfen tekrar deneyin!");
         }
+
+        btn.disabled = false;
+        renderFeed();
     }
 
-    function escapeHtml(str) {
-        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
-
-    // Sayfa açıldığında canlı verileri çek
+    // SAYFA YÜKLENDİĞİNDE
+    initAdminAccount();
+    updateUserUI();
     renderFeed();
 </script>
 </body>
 </html>
-
